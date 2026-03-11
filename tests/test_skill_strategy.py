@@ -6,11 +6,13 @@ priority means our bundle must appear before obra's.
 """
 
 import os
+from pathlib import Path
 
 import yaml
 import pytest
 
-REPO_ROOT = os.path.join(os.path.dirname(__file__), "..")
+REPO_ROOT = Path(__file__).parent.parent
+SKILLS_DIR = REPO_ROOT / "skills"
 BEHAVIOR_YAML = os.path.join(REPO_ROOT, "behaviors", "superpowers-methodology.yaml")
 
 
@@ -19,7 +21,9 @@ class TestSkillSourceOrder:
 
     @pytest.fixture(autouse=True)
     def load_config(self):
-        assert os.path.isfile(BEHAVIOR_YAML), f"Behavior YAML not found: {BEHAVIOR_YAML}"
+        assert os.path.isfile(BEHAVIOR_YAML), (
+            f"Behavior YAML not found: {BEHAVIOR_YAML}"
+        )
         with open(BEHAVIOR_YAML) as f:
             self.config = yaml.safe_load(f)
 
@@ -57,3 +61,28 @@ class TestSkillSourceOrder:
             f"Expected obra/superpowers to be listed second, "
             f"but second entry is: {skills_config[1]}"
         )
+
+
+class TestSkillCount:
+    """Tests that only the expected skill directories remain after removing obra duplicates."""
+
+    EXPECTED_SKILLS = {"integration-testing-discipline", "superpowers-reference"}
+    REMOVED_SKILLS = {
+        "systematic-debugging",
+        "verification-before-completion",
+        "finishing-a-development-branch",
+        "code-review-reception",
+        "parallel-agent-dispatch",
+    }
+
+    def test_only_two_skills_remain(self):
+        """Only integration-testing-discipline and superpowers-reference should exist."""
+        skill_dirs = {d.name for d in SKILLS_DIR.iterdir() if d.is_dir()}
+        assert skill_dirs == self.EXPECTED_SKILLS
+
+    def test_removed_skills_not_present(self):
+        """Each of the 5 removed skill directories must not exist."""
+        for skill in self.REMOVED_SKILLS:
+            assert not (SKILLS_DIR / skill).exists(), (
+                f"Expected skill '{skill}' to be removed but it still exists"
+            )
