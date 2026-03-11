@@ -106,14 +106,13 @@ Execute these workflows using the recipes tool:
 
 ## Reference: Skills
 
-Load these for reference using the skills tool:
+This bundle provides 2 Amplifier-specific skills. All other methodology skills are provided by `obra/superpowers`.
 
-| Skill | Purpose |
-|-------|---------|
-| `test-driven-development` | TDD methodology and rules |
-| `systematic-debugging` | 4-phase debugging framework |
-| `verification-before-completion` | Gate Function for verification — no claims without fresh evidence |
-| `finishing-a-development-branch` | Complete development — verify tests, present 4 options, clean up |
+| Skill | Purpose | Source |
+|-------|---------|--------|
+| `integration-testing-discipline` | 4 principles for E2E testing discipline | This bundle |
+| `superpowers-reference` | Complete reference tables (this document) | This bundle |
+| `test-driven-development` | TDD methodology and rules | obra/superpowers |
 
 ## Philosophy Reference
 

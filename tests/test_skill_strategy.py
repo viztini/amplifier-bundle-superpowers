@@ -143,3 +143,33 @@ class TestContextFileUpdates:
         assert 'skill_name="parallel-agent-dispatch"' not in content, (
             'Expected skill_name="parallel-agent-dispatch" to be removed from context/instructions.md'
         )
+
+
+class TestSuperpowersReferenceSkill:
+    """Tests for the superpowers-reference skill content."""
+
+    SKILL_FILE = REPO_ROOT / 'skills' / 'superpowers-reference' / 'SKILL.md'
+    REMOVED_SKILLS = [
+        "systematic-debugging",
+        "verification-before-completion",
+        "finishing-a-development-branch",
+        "code-review-reception",
+        "dispatching-parallel-agents",
+    ]
+
+    def test_skill_exists(self):
+        """The superpowers-reference SKILL.md must exist."""
+        assert self.SKILL_FILE.exists(), (
+            f"Expected superpowers-reference SKILL.md at {self.SKILL_FILE}"
+        )
+
+    def test_no_removed_skill_references(self):
+        """No line should reference removed skills without noting they're from obra or removed."""
+        content = self.SKILL_FILE.read_text()
+        for skill_name in self.REMOVED_SKILLS:
+            for line in content.splitlines():
+                if skill_name in line:
+                    line_lower = line.lower()
+                    assert "obra" in line_lower or "removed" in line_lower, (
+                        f"Line references removed skill '{skill_name}' without 'obra' or 'removed': {line!r}"
+                    )
