@@ -99,6 +99,24 @@ Check that nothing else broke:
 ❌ "I don't think anything else is affected"
 ```
 
+### Regression Test Verification (Red-Green Regression Cycle)
+
+When verifying a bug fix includes a regression test, you must confirm the test actually catches the bug — not just that it passes now:
+
+1. **Write the regression test** — a test that should fail when the bug is present
+2. **Run with fix → PASS** — confirm the test passes with your fix in place
+3. **Revert fix temporarily via git stash** — remove the fix to restore the buggy state
+4. **Run test again → FAIL** — confirms the test actually catches the bug
+5. **Restore fix via git stash pop** — bring back your fix
+6. **Run test again → PASS** — confirm fix is restored and test passes
+
+> If step 4 doesn't fail, your test doesn't actually test for the bug. It's a false positive.
+
+```
+✅ Red-green cycle verified: test failed on revert, passes with fix
+❌ "Test passes" (without confirming it fails when bug is present)
+```
+
 ## Delegation During Verification
 
 `delegate` is on WARN — the first call is blocked with a reminder. This is intentional.

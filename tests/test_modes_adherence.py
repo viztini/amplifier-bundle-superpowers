@@ -374,3 +374,13 @@ class TestModeContentEnrichment:
         assert "model" in content.lower(), (
             "execute-plan.md: missing model selection guidance (expected 'model' in content)"
         )
+
+    def test_verify_has_regression_pattern(self) -> None:
+        """verify.md contains regression test verification pattern with 'regression' and 'revert'."""
+        content = _read_mode("verify.md")
+        assert "regression" in content.lower(), (
+            "verify.md: missing 'regression' (expected Regression Test Verification pattern)"
+        )
+        assert "revert" in content.lower(), (
+            "verify.md: missing 'revert' (expected Red-Green Regression Cycle with revert step)"
+        )
