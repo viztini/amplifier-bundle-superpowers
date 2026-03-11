@@ -92,6 +92,19 @@ Break into bite-sized TDD tasks with exact file paths, complete code, and expect
 
 This delegation is MANDATORY. You analyzed and discussed the approach with the user. Now the agent writes the plan. Do NOT attempt to write it yourself.
 
+### Step 2.5: Plan File Structure
+
+Before defining individual tasks, explicitly decide the file decomposition:
+
+- **Which files will be created** — list every new file with its exact path
+- **Which files will be modified** — list every existing file that needs changes
+- **Directory structure** — confirm where new files live, that it matches existing conventions
+- **Where tests go** — exact test file paths, one test file per source file or per feature
+
+This prevents the implementer from making file organization decisions they'll get wrong.
+
+Do NOT proceed to task breakdown until file structure is decided and confirmed with the user.
+
 ### What the Plan Must Contain
 
 Each task is ONE action taking 2-5 minutes:

@@ -384,3 +384,13 @@ class TestModeContentEnrichment:
         assert "revert" in content.lower(), (
             "verify.md: missing 'revert' (expected Red-Green Regression Cycle with revert step)"
         )
+
+    def test_write_plan_has_file_structure_planning(self) -> None:
+        """write-plan.md contains file structure planning guidance with 'file' and 'structure'."""
+        content = _read_mode("write-plan.md")
+        assert "file" in content.lower(), (
+            "write-plan.md: missing 'file' (expected file structure planning guidance)"
+        )
+        assert "structure" in content.lower(), (
+            "write-plan.md: missing 'structure' (expected file structure planning guidance)"
+        )
