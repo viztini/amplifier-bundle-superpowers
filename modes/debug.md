@@ -256,6 +256,10 @@ When the user gives correction signals during debugging, listen carefully:
 | "Have you traced this back to the source?" | You're fixing at the symptom, not the root cause | Return to Phase 1. Trace backward through the call chain. |
 | "How many layers validate this?" | Single-point fix is fragile | Apply defense-in-depth: validate at entry, business logic, environment, and debug layers. |
 
+## Cross-Phase Reminders
+
+@superpowers:context/shared-anti-rationalization.md
+
 ## Quick Reference
 
 | Phase | Key Activities | Who Does It | Success Criteria |

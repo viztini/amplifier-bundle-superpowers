@@ -328,3 +328,32 @@ class TestModeContentEnrichment:
         assert "@superpowers:context/shared-anti-rationalization.md" in content, (
             "brainstorm.md: missing '@superpowers:context/shared-anti-rationalization.md'"
         )
+
+    def test_debug_has_architecture_escalation(self) -> None:
+        """debug.md contains '3' and 'architecture' (3-attempt architecture escalation)."""
+        content = _read_mode("debug.md")
+        assert "3" in content, "debug.md: missing '3' (for 3-attempt escalation rule)"
+        assert "architecture" in content.lower(), (
+            "debug.md: missing 'architecture' in architecture escalation guidance"
+        )
+
+    def test_debug_has_human_partner_signals(self) -> None:
+        """debug.md contains 'Human Partner Signals' section."""
+        content = _read_mode("debug.md")
+        assert "Human Partner Signals" in content, (
+            "debug.md: missing 'Human Partner Signals' section"
+        )
+
+    def test_debug_fixed_at_mention(self) -> None:
+        """debug.md contains '@superpowers:context/debugging-techniques.md'."""
+        content = _read_mode("debug.md")
+        assert "@superpowers:context/debugging-techniques.md" in content, (
+            "debug.md: missing '@superpowers:context/debugging-techniques.md'"
+        )
+
+    def test_debug_has_shared_anti_rationalization_mention(self) -> None:
+        """debug.md contains the exact @-mention for shared-anti-rationalization.md."""
+        content = _read_mode("debug.md")
+        assert "@superpowers:context/shared-anti-rationalization.md" in content, (
+            "debug.md: missing '@superpowers:context/shared-anti-rationalization.md'"
+        )
