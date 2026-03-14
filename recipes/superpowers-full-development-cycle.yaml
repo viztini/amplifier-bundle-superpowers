@@ -15,7 +15,7 @@
 
 name: "superpowers-full-development-cycle"
 description: "Complete development workflow from idea to merged code, composing all Superpowers recipes"
-version: "1.0.1"
+version: "1.0.2"
 author: "Superpowers Bundle"
 tags: ["workflow", "development", "tdd", "full-cycle", "meta-recipe"]
 
@@ -68,7 +68,6 @@ stages:
           
           Provide a concise summary (2-3 paragraphs) to inform the design.
         output: "project_context"
-        timeout: 300
 
       # Explore requirements through questions
       - id: "explore-requirements"
@@ -89,7 +88,6 @@ stages:
           Then answer them yourself based on reasonable assumptions and the project context.
           Document both the questions and your answers.
         output: "requirements"
-        timeout: 300
 
       # Design the solution
       - id: "create-design"
@@ -113,7 +111,6 @@ stages:
           
           Format as clean markdown suitable for saving to a file.
         output: "design_content"
-        timeout: 600
 
       # Save design document
       - id: "save-design"
@@ -142,7 +139,6 @@ stages:
           
           This summary helps the human decide whether to approve.
         output: "design_summary"
-        timeout: 300
 
     # APPROVAL GATE 1: Approve design before planning
     approval:
@@ -204,7 +200,6 @@ stages:
           ## Verification
           How to verify the complete implementation works
         output: "plan_content"
-        timeout: 600
 
       # Save plan document
       - id: "save-plan"
@@ -231,7 +226,6 @@ stages:
           3. Key milestones
           4. Any concerns about the plan
         output: "plan_summary"
-        timeout: 300
 
     # APPROVAL GATE 2: Approve plan before implementation
     approval:
@@ -269,7 +263,6 @@ stages:
           
           Report the full worktree path and branch name.
         output: "worktree_info"
-        timeout: 300
 
       # Read the plan
       - id: "load-plan"
@@ -286,7 +279,6 @@ stages:
         context:
           plan_path: "{{paths.plan_path}}"
         output: "implementation_result"
-        timeout: 7200
         on_error: "continue"
 
       # Debug handler for failures
@@ -319,7 +311,6 @@ stages:
           
           Report what was wrong and how you fixed it.
         output: "debug_result"
-        timeout: 600
         on_error: "continue"
 
       # Verify implementation against spec
@@ -339,7 +330,6 @@ stages:
           
           Provide a verification report with pass/fail status.
         output: "verification_result"
-        timeout: 600
         on_error: "continue"
 
       # Present implementation for approval
@@ -426,7 +416,6 @@ stages:
           
           Report what was done.
         output: "finish_result"
-        timeout: 300
 
       # Final summary
       - id: "final-summary"

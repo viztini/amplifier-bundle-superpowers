@@ -29,7 +29,7 @@
 
 name: "subagent-driven-development"
 description: "Execute implementation plan with fresh agents per task and two-stage review (spec compliance then code quality)"
-version: "3.0.1"
+version: "3.0.2"
 author: "Superpowers Bundle"
 tags: ["implementation", "subagent", "tdd", "two-stage-review", "code-quality", "foreach", "per-task-pipeline"]
 
@@ -77,7 +77,6 @@ stages:
           IMPORTANT: Preserve ALL spec details - they are critical for review.
         output: "plan_data"
         parse_json: true
-        timeout: 600
 
       # -----------------------------------------------------------------------
       # Step 2: Per-Task Pipeline (implement -> spec-review -> quality-review)
@@ -123,7 +122,6 @@ stages:
               - implementation_notes: Key decisions or notes
               - spec_coverage: How each spec requirement was addressed
             output: "task_implementation"
-            timeout: 1200  # 20 minutes per task (bumped from 900 for API load)
             retry:
               max_attempts: 3
               backoff: exponential
@@ -160,7 +158,6 @@ stages:
                   - "VERDICT: APPROVED" — spec fully implemented, nothing extra
                   - "VERDICT: NEEDS CHANGES — [list specific issues]"
                 output: "spec_verdict"
-                timeout: 600
                 retry:
                   max_attempts: 3
                   backoff: exponential
@@ -200,7 +197,6 @@ stages:
 
                   Return updated implementation results.
                 output: "task_implementation"
-                timeout: 600
                 retry:
                   max_attempts: 3
                   backoff: exponential
@@ -219,7 +215,6 @@ stages:
               Flag this task as having unresolved spec issues. Include this warning
               in the task summary so the human reviewer is aware during the approval gate.
             output: "spec_unresolved"
-            timeout: 300
 
           # --- 2c: Code quality review loop ---
           - id: "quality-review-loop"
@@ -255,7 +250,6 @@ stages:
                   Minor/suggestion issues do NOT block approval.
                   Only critical and major issues require NEEDS CHANGES.
                 output: "quality_verdict"
-                timeout: 600
                 retry:
                   max_attempts: 3
                   backoff: exponential
@@ -295,7 +289,6 @@ stages:
 
                   Return updated implementation results.
                 output: "task_implementation"
-                timeout: 600
                 retry:
                   max_attempts: 3
                   backoff: exponential
@@ -314,7 +307,6 @@ stages:
               Flag this task as having unresolved quality issues. Include this warning
               in the task summary so the human reviewer is aware during the approval gate.
             output: "quality_unresolved"
-            timeout: 300
 
         collect: "completed_tasks"
 
@@ -353,7 +345,6 @@ stages:
           ## Issues Resolved
           Summary of issues found and fixed during reviews.
         output: "execution_summary"
-        timeout: 300
         on_error: "continue"
 
   # ============================================================================
@@ -424,7 +415,6 @@ stages:
           ## Files Changed Summary
           [Complete list of all files modified across all tasks]
         output: "final_review"
-        timeout: 600
         retry:
           max_attempts: 3
           backoff: exponential
@@ -452,7 +442,6 @@ stages:
           - Summary of branch state
           - List of commits made during implementation
         output: "approval_prep"
-        timeout: 300
         on_error: "continue"
 
     approval:
@@ -517,7 +506,6 @@ stages:
 
           Report any failures. These MUST be fixed before merge.
         output: "verification_results"
-        timeout: 300
 
       - id: "present-merge-options"
         agent: "foundation:zen-architect"
@@ -585,4 +573,3 @@ stages:
           ### Next Steps
           Fix the listed issues, then re-run verification.
         output: "completion_report"
-        timeout: 300

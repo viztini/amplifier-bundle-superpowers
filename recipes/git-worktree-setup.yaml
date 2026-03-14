@@ -26,7 +26,7 @@
 
 name: "git-worktree-setup"
 description: "Create an isolated git worktree for feature development with automatic project setup and baseline verification"
-version: "1.0.1"
+version: "1.0.2"
 author: "Superpowers Bundle"
 tags: ["git", "worktree", "feature-development", "isolation", "setup"]
 
@@ -57,7 +57,6 @@ stages:
           - Current contents of those directories (list existing worktrees)
           - The project root path for reference
         output: "existing_dirs"
-        timeout: 60
 
       - id: "determine-location"
         agent: "foundation:git-ops"
@@ -96,7 +95,6 @@ stages:
           - Full path for the new worktree
           - Whether base directory needs to be created
         output: "worktree_path_info"
-        timeout: 90
 
       - id: "verify-gitignore"
         agent: "foundation:git-ops"
@@ -127,7 +125,6 @@ stages:
              - Any changes made to .gitignore
              - Confirmation that worktree directory is safely ignored
         output: "gitignore_status"
-        timeout: 90
 
   # ============================================================================
   # STAGE 2: Worktree Creation
@@ -173,7 +170,6 @@ stages:
           - Base commit the branch is starting from
           - Output from `git worktree list`
         output: "worktree_result"
-        timeout: 120
 
   # ============================================================================
   # STAGE 3: Project Setup
@@ -212,7 +208,6 @@ stages:
           - Recommended setup commands in order
           - Any special setup scripts found (setup.sh, bootstrap, etc.)
         output: "project_detection"
-        timeout: 90
 
       - id: "run-setup"
         agent: "superpowers:implementer"
@@ -248,7 +243,6 @@ stages:
           - Overall setup status (all passed / some failed)
           - Time taken for setup
         output: "setup_result"
-        timeout: 600  # 10 minutes for potentially slow installs
 
   # ============================================================================
   # STAGE 4: Baseline Verification (APPROVAL GATE IF TESTS FAIL)
@@ -297,7 +291,6 @@ stages:
           - If failed: First 10 failure messages (truncated if more)
           - Total test run time
         output: "test_results"
-        timeout: 600  # 10 minutes for test suites
         on_error: "continue"  # Don't fail recipe if tests fail - we want to report
 
     approval:
@@ -381,5 +374,4 @@ stages:
           - Commit and push from within the worktree as normal
           - Use `git worktree list` to see all active worktrees
         output: "final_report"
-        timeout: 90
         on_error: "continue"

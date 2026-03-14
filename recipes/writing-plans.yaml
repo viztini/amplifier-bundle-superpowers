@@ -16,7 +16,7 @@
 
 name: "writing-plans"
 description: "Create detailed implementation plans with bite-sized tasks (2-5 min each), TDD format, and human approval gate"
-version: "1.0.1"
+version: "1.0.2"
 author: "Superpowers Bundle"
 tags: ["planning", "implementation", "tdd", "workflow"]
 
@@ -48,7 +48,6 @@ stages:
 
           Format your response as a structured summary that can be used for implementation planning.
         output: "design_analysis"
-        timeout: 300
 
       - id: "analyze-requirements"
         agent: "superpowers:plan-writer"
@@ -75,7 +74,6 @@ stages:
           Provide a structured task breakdown that follows TDD principles:
           write test -> verify fail -> implement -> verify pass -> commit
         output: "task_breakdown"
-        timeout: 300
 
       - id: "create-plan"
         agent: "superpowers:plan-writer"
@@ -178,7 +176,6 @@ stages:
 
           Generate the complete implementation plan now.
         output: "implementation_plan"
-        timeout: 600
 
     # APPROVAL GATE: Human must validate the plan before saving
     approval:
@@ -218,7 +215,6 @@ stages:
           Respond with ONLY the kebab-case feature name (e.g., "user-authentication").
           No explanation, no quotes, just the name.
         output: "extracted_feature_name"
-        timeout: 60
 
       - id: "save-plan"
         agent: "superpowers:plan-writer"
@@ -238,7 +234,6 @@ stages:
           - The exact file path where the plan was saved
           - Confirmation that the file was written successfully
         output: "saved_plan_path"
-        timeout: 120
 
       - id: "offer-execution"
         agent: "superpowers:plan-writer"
@@ -293,5 +288,4 @@ stages:
 
           What would you like to do?
         output: "execution_options"
-        timeout: 120
         on_error: "continue"

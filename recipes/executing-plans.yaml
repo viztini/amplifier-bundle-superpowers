@@ -21,7 +21,7 @@
 
 name: "executing-plans"
 description: "Execute implementation plans in batches with human approval checkpoints"
-version: "1.0.1"
+version: "1.0.2"
 author: "Superpowers Bundle"
 tags: ["implementation", "planning", "batched-execution", "human-in-loop"]
 
@@ -48,7 +48,6 @@ stages:
 
           Return the structured information so we can track progress.
         output: "plan_data"
-        timeout: 120
 
       - id: "critical-review"
         agent: "superpowers:spec-reviewer"
@@ -75,7 +74,6 @@ stages:
           - List of any blocking concerns (empty if none)
           - Recommendations for proceeding
         output: "plan_review"
-        timeout: 180
 
     approval:
       required: true
@@ -114,7 +112,6 @@ stages:
 
           If NO tasks remain, indicate "ALL_TASKS_COMPLETE".
         output: "current_batch"
-        timeout: 120
 
       - id: "execute-tasks"
         agent: "superpowers:implementer"
@@ -156,7 +153,6 @@ stages:
 
           If you hit a blocker, report it and stop - do not continue to next task.
         output: "execution_results"
-        timeout: 1800  # 30 minutes for batch execution
 
   # ============================================================================
   # STAGE 3: Batch Report (APPROVAL GATE)
@@ -201,7 +197,6 @@ stages:
           ## Recommendations
           Any suggestions for the next batch or overall approach.
         output: "batch_report"
-        timeout: 180
 
       - id: "check-remaining"
         agent: "superpowers:plan-writer"
@@ -222,7 +217,6 @@ stages:
           - plan_complete: [true/false]
           - next_action: "continue_batches" | "resolve_blockers" | "proceed_to_finish"
         output: "plan_status"
-        timeout: 120
 
     approval:
       required: true
@@ -272,7 +266,6 @@ stages:
 
           Report what adjustments were made (if any).
         output: "feedback_applied"
-        timeout: 300
 
       - id: "next-steps"
         agent: "superpowers:plan-writer"
@@ -299,7 +292,6 @@ stages:
 
           Be clear and actionable in your guidance.
         output: "next_steps_guidance"
-        timeout: 120
         on_error: "continue"
 
   # ============================================================================
@@ -325,7 +317,6 @@ stages:
           - Test suite results: [pass/fail with details]
           - Any integration issues found
         output: "completion_verification"
-        timeout: 600
 
       - id: "present-finish-options"
         agent: "foundation:zen-architect"
@@ -366,7 +357,6 @@ stages:
             Explain what failed and what needs to be addressed before finishing.
             Do NOT present merge options until issues are resolved.
         output: "finish_options"
-        timeout: 180
 
     approval:
       required: true

@@ -29,7 +29,7 @@
 
 name: "finish-branch"
 description: "Complete a development branch - verify tests, present options, execute choice, clean up"
-version: "1.0.1"
+version: "1.0.2"
 author: "Superpowers Bundle"
 tags: ["git", "branch-management", "workflow", "human-in-loop"]
 
@@ -63,7 +63,6 @@ stages:
 
           Return all this information clearly structured.
         output: "branch_info"
-        timeout: 60
 
       - id: "run-tests"
         agent: "superpowers:implementer"
@@ -86,7 +85,6 @@ stages:
 
           IMPORTANT: Report clearly whether ALL TESTS PASSED or if there were failures.
         output: "test_results"
-        timeout: 600
 
       - id: "summarize-changes"
         agent: "superpowers:code-quality-reviewer"
@@ -118,7 +116,6 @@ stages:
 
           This summary will be used for PR descriptions if the user chooses that option.
         output: "change_summary"
-        timeout: 180
 
   # ============================================================================
   # STAGE 2: Present Options (APPROVAL GATE)
@@ -181,7 +178,6 @@ stages:
           CRITICAL: If tests failed, clearly indicate that MERGE is NOT available.
           The user must fix tests before merging.
         output: "options_display"
-        timeout: 120
 
     approval:
       required: true
@@ -238,7 +234,6 @@ stages:
           - option_valid: true | false (false if MERGE selected but tests failed)
           - reason: explanation if option is invalid
         output: "user_choice"
-        timeout: 60
 
       - id: "execute-merge"
         agent: "foundation:git-ops"
@@ -267,7 +262,6 @@ stages:
 
           Set needs_worktree_cleanup: true
         output: "execution_result"
-        timeout: 300
 
       - id: "execute-pr"
         agent: "foundation:git-ops"
@@ -303,7 +297,6 @@ stages:
 
           Set needs_worktree_cleanup: false
         output: "execution_result"
-        timeout: 180
 
       - id: "execute-keep"
         agent: "foundation:git-ops"
@@ -326,7 +319,6 @@ stages:
 
           Set needs_worktree_cleanup: false
         output: "execution_result"
-        timeout: 60
 
       - id: "execute-discard"
         agent: "foundation:git-ops"
@@ -352,7 +344,6 @@ stages:
 
           Set needs_worktree_cleanup: false (already handled)
         output: "execution_result"
-        timeout: 180
 
       - id: "handle-blocked-merge"
         agent: "superpowers:spec-reviewer"
@@ -386,7 +377,6 @@ stages:
 
           Set needs_worktree_cleanup: false
         output: "execution_result"
-        timeout: 120
 
   # ============================================================================
   # STAGE 4: Cleanup
@@ -414,7 +404,6 @@ stages:
 
           Report what was cleaned up (if anything).
         output: "cleanup_result"
-        timeout: 120
         on_error: "continue"
 
       - id: "final-summary"
@@ -450,5 +439,4 @@ stages:
 
           ======================================================================
         output: "final_summary"
-        timeout: 120
         on_error: "continue"
