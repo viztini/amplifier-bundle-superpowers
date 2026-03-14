@@ -29,7 +29,7 @@
 
 name: "subagent-driven-development"
 description: "Execute implementation plan with fresh agents per task and two-stage review (spec compliance then code quality)"
-version: "3.0.0"
+version: "3.0.1"
 author: "Superpowers Bundle"
 tags: ["implementation", "subagent", "tdd", "two-stage-review", "code-quality", "foreach", "per-task-pipeline"]
 
@@ -370,7 +370,7 @@ stages:
           Review the ENTIRE implementation across all tasks.
 
           EXECUTION SUMMARY:
-          {{execution_summary}}
+          {{execution_summary}} (may be empty if summarization failed — use completed task data as primary source)
 
           COMPLETED TASKS:
           {{completed_tasks}}
@@ -440,7 +440,7 @@ stages:
           {{final_review}}
 
           EXECUTION SUMMARY:
-          {{execution_summary}}
+          {{execution_summary}} (may be empty if summarization failed)
 
           Run the full test suite to provide current test status:
           - Execute all tests
@@ -496,7 +496,7 @@ stages:
           {{final_review}}
 
           APPROVAL PREP:
-          {{approval_prep}}
+          {{approval_prep}} (may be empty if preparation failed — proceed with verification regardless)
 
           Execute comprehensive verification:
           1. RUN FULL TEST SUITE
@@ -530,7 +530,7 @@ stages:
           {{verification_results}}
 
           EXECUTION SUMMARY:
-          {{execution_summary}}
+          {{execution_summary}} (may be empty if summarization failed)
 
           FINAL REVIEW:
           {{final_review}}

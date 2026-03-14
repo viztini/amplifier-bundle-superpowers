@@ -29,7 +29,7 @@
 
 name: "finish-branch"
 description: "Complete a development branch - verify tests, present options, execute choice, clean up"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["git", "branch-management", "workflow", "human-in-loop"]
 
@@ -415,6 +415,7 @@ stages:
           Report what was cleaned up (if anything).
         output: "cleanup_result"
         timeout: 120
+        on_error: "continue"
 
       - id: "final-summary"
         agent: "foundation:zen-architect"
@@ -450,3 +451,4 @@ stages:
           ======================================================================
         output: "final_summary"
         timeout: 120
+        on_error: "continue"

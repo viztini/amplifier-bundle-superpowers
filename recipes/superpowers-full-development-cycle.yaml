@@ -15,7 +15,7 @@
 
 name: "superpowers-full-development-cycle"
 description: "Complete development workflow from idea to merged code, composing all Superpowers recipes"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["workflow", "development", "tdd", "full-cycle", "meta-recipe"]
 
@@ -41,13 +41,16 @@ stages:
           echo "{\"design_path\": \"docs/plans/${DATE}-${FEATURE_SLUG}-design.md\", \"plan_path\": \"docs/plans/${DATE}-${FEATURE_SLUG}-plan.md\", \"branch_name\": \"feature/${FEATURE_SLUG}\", \"feature_slug\": \"${FEATURE_SLUG}\"}"
         parse_json: true
         output: "paths"
+        timeout: 30
 
       # Ensure docs/plans directory exists
       - id: "ensure-dirs"
         type: "bash"
         command: |
+          set -e
           mkdir -p "{{project_path}}/docs/plans"
           echo "Created docs/plans directory"
+        timeout: 30
 
       # Understand project context
       - id: "understand-context"
@@ -65,6 +68,7 @@ stages:
           
           Provide a concise summary (2-3 paragraphs) to inform the design.
         output: "project_context"
+        timeout: 300
 
       # Explore requirements through questions
       - id: "explore-requirements"
@@ -85,6 +89,7 @@ stages:
           Then answer them yourself based on reasonable assumptions and the project context.
           Document both the questions and your answers.
         output: "requirements"
+        timeout: 300
 
       # Design the solution
       - id: "create-design"
@@ -108,6 +113,7 @@ stages:
           
           Format as clean markdown suitable for saving to a file.
         output: "design_content"
+        timeout: 600
 
       # Save design document
       - id: "save-design"
@@ -118,6 +124,7 @@ stages:
           DESIGN_EOF
           echo "Saved design to {{paths.design_path}}"
         output: "save_design_result"
+        timeout: 60
 
       # Present design for approval
       - id: "present-design"
@@ -135,6 +142,7 @@ stages:
           
           This summary helps the human decide whether to approve.
         output: "design_summary"
+        timeout: 300
 
     # APPROVAL GATE 1: Approve design before planning
     approval:
@@ -160,6 +168,7 @@ stages:
         command: |
           cat "{{project_path}}/{{paths.design_path}}"
         output: "design_doc"
+        timeout: 30
 
       # Create implementation plan
       - id: "create-plan"
@@ -195,6 +204,7 @@ stages:
           ## Verification
           How to verify the complete implementation works
         output: "plan_content"
+        timeout: 600
 
       # Save plan document
       - id: "save-plan"
@@ -205,6 +215,7 @@ stages:
           PLAN_EOF
           echo "Saved plan to {{paths.plan_path}}"
         output: "save_plan_result"
+        timeout: 60
 
       # Present plan for approval
       - id: "present-plan"
@@ -220,6 +231,7 @@ stages:
           3. Key milestones
           4. Any concerns about the plan
         output: "plan_summary"
+        timeout: 300
 
     # APPROVAL GATE 2: Approve plan before implementation
     approval:
@@ -257,6 +269,7 @@ stages:
           
           Report the full worktree path and branch name.
         output: "worktree_info"
+        timeout: 300
 
       # Read the plan
       - id: "load-plan"
@@ -264,6 +277,7 @@ stages:
         command: |
           cat "{{project_path}}/{{paths.plan_path}}"
         output: "plan_doc"
+        timeout: 30
 
       # This composes the SDD recipe directly — its internal approval gate at final-review surfaces through the parent automatically
       - id: "execute-plan"
@@ -272,6 +286,7 @@ stages:
         context:
           plan_path: "{{paths.plan_path}}"
         output: "implementation_result"
+        timeout: 7200
         on_error: "continue"
 
       # Debug handler for failures
@@ -285,6 +300,7 @@ stages:
           fi
         parse_json: true
         output: "error_check"
+        timeout: 30
 
       - id: "debug-if-needed"
         condition: "{{error_check.has_error}} == true"
@@ -303,6 +319,8 @@ stages:
           
           Report what was wrong and how you fixed it.
         output: "debug_result"
+        timeout: 600
+        on_error: "continue"
 
       # Verify implementation against spec
       - id: "verify-implementation"
@@ -321,6 +339,8 @@ stages:
           
           Provide a verification report with pass/fail status.
         output: "verification_result"
+        timeout: 600
+        on_error: "continue"
 
       # Present implementation for approval
       - id: "present-implementation"
@@ -337,6 +357,8 @@ stages:
           echo "=== Test Status ===" && \
           (python -m pytest --tb=no -q 2>/dev/null || npm test 2>/dev/null || echo "Run tests manually to verify")
         output: "implementation_summary"
+        timeout: 120
+        on_error: "continue"
 
     # APPROVAL GATE 3: Choose finish action
     approval:
@@ -363,6 +385,7 @@ stages:
       - id: "determine-action"
         type: "bash"
         command: |
+          set -e
           ACTION="{{_approval_message}}"
           if [ -z "$ACTION" ]; then
             ACTION="pr"
@@ -370,6 +393,7 @@ stages:
           echo "{\"action\": \"${ACTION}\"}"
         parse_json: true
         output: "finish_action"
+        timeout: 30
 
       # Execute the finish action
       - id: "execute-finish"
@@ -402,6 +426,7 @@ stages:
           
           Report what was done.
         output: "finish_result"
+        timeout: 300
 
       # Final summary
       - id: "final-summary"
@@ -422,5 +447,5 @@ stages:
           echo ""
           echo "============================================"
         output: "final_output"
-
-final_output: "final_output"
+        timeout: 30
+        on_error: "continue"

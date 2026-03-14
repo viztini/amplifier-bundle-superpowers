@@ -26,7 +26,7 @@
 
 name: "git-worktree-setup"
 description: "Create an isolated git worktree for feature development with automatic project setup and baseline verification"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["git", "worktree", "feature-development", "isolation", "setup"]
 
@@ -382,3 +382,4 @@ stages:
           - Use `git worktree list` to see all active worktrees
         output: "final_report"
         timeout: 90
+        on_error: "continue"

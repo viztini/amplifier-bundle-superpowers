@@ -16,7 +16,7 @@
 
 name: "writing-plans"
 description: "Create detailed implementation plans with bite-sized tasks (2-5 min each), TDD format, and human approval gate"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["planning", "implementation", "tdd", "workflow"]
 
@@ -294,3 +294,4 @@ stages:
           What would you like to do?
         output: "execution_options"
         timeout: 120
+        on_error: "continue"

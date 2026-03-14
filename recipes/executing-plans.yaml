@@ -21,7 +21,7 @@
 
 name: "executing-plans"
 description: "Execute implementation plans in batches with human approval checkpoints"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["implementation", "planning", "batched-execution", "human-in-loop"]
 
@@ -300,6 +300,7 @@ stages:
           Be clear and actionable in your guidance.
         output: "next_steps_guidance"
         timeout: 120
+        on_error: "continue"
 
   # ============================================================================
   # STAGE 5: Finish (only if all tasks complete)

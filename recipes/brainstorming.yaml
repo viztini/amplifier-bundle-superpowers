@@ -10,7 +10,7 @@
 
 name: "brainstorming"
 description: "Design refinement workflow that turns rough ideas into fully formed designs through collaborative dialogue"
-version: "1.0.0"
+version: "1.0.1"
 author: "Superpowers Bundle"
 tags: ["design", "brainstorming", "planning", "architecture", "collaborative"]
 
@@ -255,3 +255,4 @@ stages:
           Which option would you prefer?
         output: "next_steps"
         timeout: 300
+        on_error: "continue"
