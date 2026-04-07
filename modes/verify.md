@@ -215,6 +215,41 @@ When verification is complete, present results as:
 [If NOT VERIFIED: what remains to be done]
 ```
 
+## Why This Matters
+
+@superpowers:context/verification-failure-memories.md
+
+## When to Apply
+
+The Iron Law and Gate Function apply in **all of the following situations**:
+
+**ALWAYS before:**
+- ANY variation of success/completion claims ("done", "complete", "fixed", "working")
+- ANY expression of satisfaction before running commands ("Great!", "Perfect!", "Looks good!")
+- ANY positive statement about work state ("everything is in order", "should be ready")
+- Committing, PR creation, or task completion
+- Moving to the next task or step
+- Delegating to agents with instructions that assume current work is correct
+
+**Rule applies to:**
+- Exact phrases: 'done', 'complete', 'fixed', 'working', 'passing', 'resolved', 'ready'
+- Paraphrases and synonyms: 'finished', 'wrapped up', 'sorted', 'good to go', 'all set'
+- Implications of success: "I've updated the file" (without showing it worked), "the test covers this"
+- ANY communication suggesting completion or correctness, regardless of exact wording
+
+The rule is not about specific words. It is about whether you have fresh evidence. If you would be asserting success without having run the verification command in this session, the rule applies.
+
+## Holistic Code Review
+
+Before calling `/finish`, you may optionally run a full-changeset code review using `superpowers:code-reviewer`. This agent reviews the entire diff — not just the feature under test — for quality, correctness, and adherence to project philosophy.
+
+Use this when:
+- A large or complex set of changes was made
+- You want a second perspective before merging
+- The implementation touched multiple unrelated areas
+
+This is optional but recommended for substantial work. Invoke via `delegate` (which is on WARN — bypass the reminder if this is intentional infrastructure use).
+
 ## The Bottom Line
 
 **No shortcuts for verification.**
