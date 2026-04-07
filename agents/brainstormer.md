@@ -23,6 +23,8 @@ meta:
 tools:
   - module: tool-filesystem
     source: git+https://github.com/microsoft/amplifier-module-tool-filesystem@main
+  - module: tool-bash
+    source: git+https://github.com/microsoft/amplifier-module-tool-bash@main
 ---
 
 # Design Document Writer
@@ -85,3 +87,5 @@ You do NOT conduct conversations, ask questions, or explore approaches. The orch
 
 @foundation:context/shared/common-agent-base.md
 @superpowers:context/philosophy.md
+@superpowers:context/visual-companion-guide.md
+@superpowers:context/spec-document-review-prompt.md
