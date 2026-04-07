@@ -137,6 +137,25 @@ delegate(agent="superpowers:implementer", model_role="coding", instruction="..."
 
 Default to `coding` when uncertain.
 
+## SDD Worked Example
+
+Load the walkthrough skill to see a realistic conversational flow of the full three-agent pipeline in action:
+
+```
+load_skill(skill_name='sdd-walkthrough')
+```
+
+The walkthrough covers 5 realistic tasks drawn from a real implementation plan. It demonstrates:
+- Orchestrator dispatching implementer → spec-reviewer → code-quality-reviewer for each task
+- Spec review failures and how the orchestrator responds (re-delegates with clarification)
+- `DONE_WITH_CONCERNS` status handling and when to propagate concerns to the quality reviewer
+- Code quality fix loops (reviewer returns issues, orchestrator re-delegates for fixes)
+- `NEEDS_CONTEXT` situations and how to resolve them before re-delegating
+- Amplifier `delegate()` calls with `model_role` parameters matched to task complexity
+- Orchestrator judgment calls throughout — when to proceed, when to stop, when to adapt
+
+Use this skill when you're unsure how to handle a tricky pipeline situation or want to calibrate your orchestration decisions against a realistic worked example.
+
 ## Cross-Phase Reminders
 
 Rationalization will occur at every phase. Review before each delegation:
