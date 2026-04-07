@@ -125,6 +125,8 @@ When you catch yourself thinking any of these, STOP:
 | "Tests after achieve the same thing" | Tests-first = "what should this do?" Tests-after = "what does this do?" |
 | "I'll keep it as reference" | You'll adapt it. That's testing after. Delete means delete. |
 | "Test is hard to write" | Hard to test = hard to use. Listen to the test. |
+| "TDD is dogmatic, I'm being pragmatic" | TDD IS pragmatic. Shortcuts = debugging in production = slower. |
+| "This is different because..." | It's not different. The process exists because every project thinks it's different. |
 
 ## The Goal
 
