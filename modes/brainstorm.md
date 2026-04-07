@@ -16,7 +16,6 @@ mode:
       - python_check
       - delegate
       - recipes
-    warn:
       - bash
   
   default_action: block
@@ -47,10 +46,13 @@ perceived simplicity.
 
 When entering brainstorm mode, create this todo checklist immediately:
 - [ ] Explore project context
+- [ ] Offer visual companion (if visual topics ahead)
 - [ ] Ask clarifying questions (one at a time)
 - [ ] Propose 2-3 approaches with tradeoffs
 - [ ] Present design in sections (validate each)
 - [ ] Delegate document creation to brainstormer agent
+- [ ] Spec self-review (placeholder, consistency, scope, ambiguity)
+- [ ] User review gate (explicit approval before /write-plan)
 - [ ] Transition to /write-plan
 
 ## The Process
@@ -67,6 +69,28 @@ Before asking a single question:
 - Understand what already exists
 
 Then state what you understand about the project context.
+
+### Phase 1.5: Offer Visual Companion
+
+After establishing project context, assess whether visual collaboration would help:
+
+**Decision logic:**
+- If the design involves UI, diagrams, visual layouts, or any topic where seeing output helps → offer the browser-based visual companion
+- If the session is purely conceptual (text-only design, no visual outputs) → stay in terminal, skip this phase
+
+**If offering the visual companion:**
+
+Check the Node.js prerequisite first:
+```bash
+node --version
+```
+
+If Node.js is available, offer the companion with an explicit consent prompt:
+> "This design involves visual elements. I can launch a browser-based visual companion that lets us see diagrams, mockups, or design output side-by-side as we work. Would you like me to start it? (yes/no)"
+
+Only launch if the user agrees. Follow the launch instructions in @superpowers:context/visual-companion-guide.md.
+
+**Other visual tools:** If the visual companion isn't needed or available, note that `nano-banana` (image generation) and `dot_graph` (diagrams) are available in-session for visual work without a browser companion.
 
 ### Phase 2: Ask Questions One at a Time
 
@@ -113,6 +137,42 @@ delegate(
 ```
 
 This delegation is MANDATORY. You discussed and validated the design with the user. Now the agent writes the document. Do NOT attempt to write it yourself.
+
+### Phase 6: Spec Self-Review
+
+Before presenting the design to the user for final approval, perform an internal quality check on the design document:
+
+**4-point checklist:**
+- [ ] **Placeholder scan** — no `[TBD]`, `[TODO]`, `[FILL IN]`, or empty sections
+- [ ] **Internal consistency** — component names, data flows, and interfaces align throughout the document
+- [ ] **Scope check** — every item in the design traces back to a user requirement; nothing extra snuck in
+- [ ] **Ambiguity check** — no vague terms like "handle errors appropriately" without specifics
+
+**Fix loop:** If any checklist item fails, fix it via the brainstormer agent (re-delegate with corrections) before proceeding.
+
+**Antagonistic spec review:** After self-review passes, dispatch an adversarial review using the prompt at @superpowers:context/spec-document-review-prompt.md. Incorporate substantive findings. Run up to 3 review cycles maximum before proceeding.
+
+### Phase 7: User Review Gate
+
+Present the final design to the user with an explicit review template:
+
+```
+Design document saved to `docs/plans/YYYY-MM-DD-<topic>-design.md`.
+
+Here's a summary of what we designed:
+- **Goal:** [one sentence]
+- **Approach:** [chosen approach and why]
+- **Key components:** [bulleted list]
+- **Open questions:** [any unresolved items]
+
+Does this match your vision? Any changes before we move to implementation planning?
+```
+
+**Explicit wait:** Do NOT transition to /write-plan until the user gives explicit approval (e.g., "yes", "looks good", "proceed"). A non-answer is not approval.
+
+**Visual companion cleanup:** If the visual companion was launched in Phase 1.5, ask the user if they want to keep it running or stop it:
+> "The visual companion is still running. Stop it now? (yes/no)"
+If yes, run the cleanup: `bash .visual-companion/stop-server.sh`
 
 ## After the Design
 
