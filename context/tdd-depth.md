@@ -1,5 +1,13 @@
 # TDD Depth Reference
 
+## The Iron Law
+
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+This is non-negotiable. Before writing a single line of production code, you must have a test that fails. Not "will fail," not "probably fails" — actually run the test and watch it fail. Only then do you write implementation.
+
 Reference material for TDD enforcement. Contains testing anti-patterns with gate functions, troubleshooting guides, extended rebuttals for common rationalizations, good/bad code examples, and a verification checklist.
 
 Load this when implementing features, writing tests, or reviewing test quality.
@@ -300,6 +308,26 @@ BEFORE claiming any implementation is complete:
 - Can't explain why mock is needed
 - Mocking "just to be safe"
 
+### TDD Red Flags — Self-Check
+
+If you hear yourself saying any of the following, stop:
+
+1. "I'll write the code first, then the test" — You are not doing TDD.
+2. "I wrote the test and it passed immediately" — Your test is wrong or you tested existing behavior.
+3. "Just this once, the deadline is tight" — Every test-after starts with this.
+4. "This is different because..." — It isn't.
+5. "I'll keep the code as reference, then write the test" — You will adapt to it. Delete means delete.
+6. "I'm just exploring to understand the problem" — Exploration without commitment is fine; exploration that produces production code is not.
+7. "The test is too hard to write" — Your design is too hard to use. Simplify.
+8. "This is too simple to need a test" — Simple things break too.
+9. "I already know it works" — Prove it.
+10. "I'll write the test right after this" — No you won't.
+11. "The existing code doesn't have tests" — You're adding to it. Add the test.
+12. "It's just a config change" — Config changes break things. Test it.
+13. "I'm just refactoring" — Refactoring without tests is rewriting. Write the test first.
+
+Every single one is a rationalization.
+
 **Mocks are tools to isolate, not things to test.** If TDD reveals you're testing mock behavior, you've gone wrong. Fix: Test real behavior or question why you're mocking at all.
 
 ---
@@ -364,6 +392,39 @@ Tests-after are biased by your implementation. You test what you built, not what
 Tests-first force edge case discovery before implementing. Tests-after verify you remembered everything (you didn't).
 
 30 minutes of tests after ≠ TDD. You get coverage, lose proof tests work.
+
+### Bug Fix Worked Example: Email Validation
+
+**The bug:** `user@.com` passes validation when it shouldn't.
+
+**Step 1 — RED: Write a regression test**
+```python
+def test_email_rejects_dot_immediately_after_at():
+    # Reproduces the reported bug: user@.com should be invalid
+    assert not is_valid_email("user@.com")
+```
+Run it. It fails — `is_valid_email("user@.com")` returns `True`. Good. The test catches the bug.
+
+**Step 2 — GREEN: Minimal fix**
+```python
+def is_valid_email(email: str) -> bool:
+    if "@" not in email:
+        return False
+    local, domain = email.rsplit("@", 1)
+    if domain.startswith("."):   # ← minimal fix
+        return False
+    return bool(local) and "." in domain
+```
+Run the test. It passes.
+
+**Verify the red-green cycle:**
+```bash
+git stash          # Remove your fix
+pytest             # Should FAIL — test catches the bug
+git stash pop      # Restore fix
+pytest             # Should PASS
+```
+This confirms your test actually caught the bug, not just coincidentally passed.
 
 ---
 
